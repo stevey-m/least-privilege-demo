@@ -23,6 +23,13 @@ not a checklist; this is the piece that reads best in an interview.
 - **Secrets:** Enable secret scanning + push protection; deliberately
   trigger and resolve one flagged "leak" to demonstrate the control.
 
+> **Future extension (not this phase):** Add a second, cross-cloud OIDC
+> path — an Entra ID App Registration with a federated credential
+> trusting this repo's GitHub OIDC issuer, so the workflow authenticates
+> to Azure with no client secret at all. Deferred until an Azure target
+> resource is set up; the GitHub Pages OIDC deploy above is the
+> in-scope version for now.
+
 ## Phase 4 — Supply chain & code security
 
 - CodeQL with at least one custom query (not just the default setup).
@@ -48,6 +55,17 @@ not a checklist; this is the piece that reads best in an interview.
 - Once using the Copilot coding agent, explicitly scope its `GITHUB_TOKEN`
   permissions to the minimum needed (e.g. read issues, write only to its
   own branch) rather than accepting default broad permissions.
+
+> **Related, not integrated:** Microsoft Entra Agent ID (preview) is a
+> parallel governance model for AI agents built on Microsoft's own
+> platforms (Copilot Studio, Azure AI Foundry) — sponsors, conditional
+> access, blueprint-issued short-lived tokens, no standing credentials.
+> The GitHub Copilot coding agent isn't currently a Microsoft Agent 365
+> agent, so there's no direct technical integration here. Worth
+> provisioning a test agent identity in Entra ID separately (their
+> PowerShell module supports this) purely as a documented talking point
+> — understanding both models, and being honest that they're not yet
+> unified, is the stronger story.
 
 ## Phase 8 — Copilot depth
 
