@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>least-privilege-demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <h1>least-privilege-demo</h1>
+    <p>A working example of least-privilege access modeling, deployed with
+       identity-first CI/CD practices.</p>
+
+    <section id="rbac-demo">
+      <h2>RBAC Permission Checker</h2>
+      <p>Pick a role, resource, and action to see if it's allowed.</p>
+
+      <label for="roleSelect">Role:</label>
+      <select id="roleSelect">
+        <option value="viewer">Viewer</option>
+        <option value="editor">Editor</option>
+        <option value="admin">Admin</option>
+      </select>
+
+      <label for="resourceSelect">Resource:</label>
+      <select id="resourceSelect">
+        <option value="document">Document</option>
+        <option value="dashboard">Dashboard</option>
+        <option value="user">User</option>
+      </select>
+
+      <label for="actionSelect">Action:</label>
+      <select id="actionSelect">
+        <option value="read">Read</option>
+        <option value="write">Write</option>
+        <option value="delete">Delete</option>
+        <option value="manage">Manage</option>
+      </select>
+
+      <button id="checkAccessBtn">Check Access</button>
+      <pre id="rbacOutput" aria-live="polite"></pre>
+    </section>
+  </main>
+
+  <script src="rbac.js"></script>
+  <script>
+    function runAccessCheck() {
+      const role = document.getElementById('roleSelect').value;
+      const resource = document.getElementById('resourceSelect').value;
+      const action = document.getElementById('actionSelect').value;
+      const allowed = can(role, resource, action);
+
+      const output = document.getElementById('rbacOutput');
+      output.textContent = allowed
+        ? `ALLOWED: ${role} may ${action} ${resource}`
+        : `DENIED: ${role} may NOT ${action} ${resource}`;
+    }
+
+    document.getElementById('checkAccessBtn').addEventListener('click', runAccessCheck);
+  </script>
+</body>
+</html>

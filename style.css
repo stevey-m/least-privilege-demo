@@ -1,0 +1,31 @@
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 640px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+  color: #1a1a1a;
+}
+
+h1 {
+  margin-bottom: 0.25rem;
+}
+
+#rbac-demo {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+select, button {
+  font-size: 1rem;
+  padding: 0.4rem;
+}
+
+#rbacOutput {
+  background: #f4f4f4;
+  padding: 0.75rem;
+  border-radius: 4px;
+  min-height: 1.5rem;
+  font-weight: 600;
+}
