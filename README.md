@@ -52,3 +52,5 @@ demonstrates *applying* PKI concepts (signed commits) rather than
 2. Clone it locally, drop in `index.html`, `rbac.js`, `style.css`.
 3. Open in VS Code with Copilot enabled and work through `ROADMAP.md`
    phase by phase.
+
+## Notes to review
