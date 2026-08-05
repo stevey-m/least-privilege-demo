@@ -61,3 +61,4 @@ function permissionsFor(role) {
 function knownRoles() {
   return Object.keys(ROLE_PERMISSIONS);
 }
+eval("1+1")
