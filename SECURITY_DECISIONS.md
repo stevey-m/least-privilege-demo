@@ -3,9 +3,22 @@
 This doc explains the *why* behind each security-relevant choice in this
 repo, not just the *what*. Updated as each phase of ROADMAP.md is built.
 
+## Current Status (at a glance)
+
+| Phase | Status |
+|---|---|
+| 1 — RBAC demo | ✅ Implemented and verified |
+| 2 — Writing decisions down | 🔄 Ongoing |
+| 3 — Human & non-human identity | ✅ Implemented and verified |
+| 4 — Supply chain & code security | ✅ Implemented and verified |
+| 5 — Review & deployment gates | ⏳ Planned, not started |
+| 6 — CI/CD depth | ⏳ Planned, not started |
+| 7 — Agent identity | ⏳ Planned, not started |
+| 8 — Copilot depth | ⏳ Planned, not started |
+
 ---
 
-## Phase 1 — RBAC demo
+## Phase 1 — RBAC demo ✅ Implemented and verified
 
 **Decision: model permissions as `role -> resource:action` strings, not
 role -> boolean flags per feature.**
@@ -48,40 +61,107 @@ production-ready than it is.
 
 ---
 
-## Phase 2 — (this doc)
+## Phase 2 — Writing decisions down as they're made 🔄 Ongoing
 
 No separate technical decision — this phase is the discipline of writing
 decisions down as they're made, rather than reconstructing them later
-from memory or commit messages.
+from memory or commit messages. This document is the artifact of that
+discipline, and stays ongoing for as long as the repo keeps evolving.
 
 ---
 
-## Phase 3 — Human & non-human identity *(not yet built)*
+## Phase 3 — Human & non-human identity ✅ Implemented and verified
 
-*To be filled in once OIDC deployment, signed commits, and secret
-scanning/push protection are implemented.*
+**Decision: deploy to GitHub Pages via OIDC instead of a stored deploy
+token or long-lived secret.**
 
-## Phase 4 — Supply chain & code security *(not yet built)*
+The workflow requests a short-lived, scoped credential from GitHub at
+run time rather than relying on a static secret sitting in repo
+settings — no standing credential exists to leak, rotate, or forget.
+Verified live: the site deploys successfully, and no deploy
+token/credential is present anywhere in the repo's stored secrets.
 
-*To be filled in once CodeQL custom queries and dependency review are
-added.*
+**Decision: use SSH-based commit signing rather than GPG.**
 
-## Phase 5 — Review & deployment gates *(not yet built)*
+GPG signing was the original plan, but hit real reliability issues on
+Windows — a background agent/keyring component intermittently failed to
+locate a key that was demonstrably present, compounded by inconsistent
+`gpg` binary resolution across shells. SSH-based signing avoided this
+entirely (no agent, no keyring daemon) and proved reliable in practice.
+Verified live: commits show as "Verified" on GitHub, and a ruleset
+requiring signed commits genuinely rejects an unsigned push attempt.
+
+**Decision: enable secret scanning with push protection, and prove it
+blocks a real secret rather than just trusting the toggle.**
+
+Push protection was tested by deliberately attempting to push a
+realistic fake secret. The push was rejected outright — the secret
+never reached shared repository history. This is stronger evidence
+than "the setting is enabled": it demonstrates the control actively
+intercepts a real attempt, not just that the feature exists.
+
+---
+
+## Phase 4 — Supply chain & code security ✅ Implemented and verified
+
+**Decision: use CodeQL's advanced setup (custom config + custom query
+pack) rather than the default auto-generated setup, so a
+repo-specific query could be added.**
+
+The default setup only runs GitHub's standard query suites and doesn't
+allow adding custom queries. A custom query flagging `eval()` usage was
+added given the RBAC logic elsewhere in the repo — dynamic code
+execution is a meaningful risk to call out specifically in a
+least-privilege-focused demo, beyond what the standard suites already
+cover. Verified live: a deliberately-introduced `eval("1+1")` test line
+in `rbac.js` produced a real alert with rule ID
+`js/least-privilege-demo/no-eval` and the custom query's description
+text — confirming the custom query genuinely executes, not just that
+the workflow runs.
+
+**Decision: add a dedicated `dependency-review` workflow with
+`fail-on-severity: moderate`, and prove it blocks a real vulnerable
+package rather than trusting the configuration alone.**
+
+Tested by installing a known-vulnerable version of `lodash`
+(`4.17.15`) on a branch and opening a PR. The check failed and listed
+six distinct advisories by name and GHSA link (three high severity —
+command injection, prototype pollution, code injection via
+`_.template`; three moderate — ReDoS and two further prototype
+pollution variants). Upgrading to the latest `lodash` on the same
+branch flipped the check to passing, confirming the control responds
+correctly in both directions (blocks the bad state, clears on
+remediation) rather than just failing once and never re-evaluating.
+
+**Open item:** during this testing, a separate `CodeQL Advanced`
+workflow (GitHub's auto-generated default setup) was observed running
+successfully in parallel with the custom `codeql.yml`, while a
+`Code scanning results / CodeQL` check on the same PR showed neutral
+with "1 configuration not found." This suggests two CodeQL
+configurations may currently coexist in the repo, or that the custom
+config reference isn't being picked up consistently on every PR. The
+custom query is confirmed working (per the `eval()` test above), but
+this discrepancy hasn't been root-caused yet and should be resolved
+before treating Phase 4's CodeQL setup as fully clean.
+
+---
+
+## Phase 5 — Review & deployment gates ⏳ Planned, not started
 
 *To be filled in once CODEOWNERS, protected environments, and
-repository rulesets are configured.*
+repository rulesets are configured for this repo.*
 
-## Phase 6 — CI/CD depth *(not yet built)*
+## Phase 6 — CI/CD depth ⏳ Planned, not started
 
 *To be filled in once the reusable workflow structure, matrix build,
 and deploy job exist.*
 
-## Phase 7 — Agent identity *(not yet built)*
+## Phase 7 — Agent identity ⏳ Planned, not started
 
 *To be filled in once the Copilot coding agent's token permissions are
 explicitly scoped.*
 
-## Phase 8 — Copilot depth *(not yet built)*
+## Phase 8 — Copilot depth ⏳ Planned, not started
 
 *To be filled in once `.github/copilot-instructions.md` exists and any
 Copilot Chat agent-mode / CLI usage has been tried and is worth noting.*
