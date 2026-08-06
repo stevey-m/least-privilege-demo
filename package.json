@@ -1,0 +1,24 @@
+{
+  "name": "least-privilege-demo",
+  "version": "1.0.0",
+  "description": "A static web app demonstrating least-privilege identity practices for humans, workloads, and AI agents — RBAC, OIDC deployment, signed commits, and scoped agent permissions — built with GitHub Copilot.",
+  "main": "rbac.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stevey-m/least-privilege-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/stevey-m/least-privilege-demo/issues"
+  },
+  "homepage": "https://github.com/stevey-m/least-privilege-demo#readme",
+  "dependencies": {
+    "lodash": "^4.18.1"
+  }
+}
