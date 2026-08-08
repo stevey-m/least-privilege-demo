@@ -1,5 +1,7 @@
 # least-privilege-demo
 
+//README
+
 A static web app demonstrating least-privilege identity practices for
 humans, workloads, and AI agents — RBAC, OIDC deployment, signed
 commits, and scoped agent permissions — built with GitHub Copilot.
@@ -11,21 +13,21 @@ thinking in a real GitHub CI/CD pipeline, not just Copilot usage.
 
 1. **Least-privilege access modeling** — RBAC demo (viewer / editor / admin)
 2. **Non-human identity (NHI)** — OIDC-based deployment; no static
-   credentials for the workload
+credentials for the workload
 3. **Secret scanning + push protection** — enabled and demonstrated
 4. **PKI in practice** — signed commits, verifying human committer identity
 5. **Supply-chain security** — CodeQL custom queries + dependency review
-   gating merges
+gating merges
 6. **Review-gated changes** — CODEOWNERS routes sensitive paths to
-   mandatory reviewers
+mandatory reviewers
 7. **Approval-gated deployments** — protected environments with required
-   reviewers
+reviewers
 8. **Scoped agent identity** — Copilot coding agent's token permissions
-   minimized to least privilege
+minimized to least privilege
 9. **Production-shaped CI/CD** — reusable workflows, matrix testing,
-   live deployed demo
+live deployed demo
 10. **Deliberate AI-assisted development** — custom Copilot instructions
-    file, documented usage patterns
+file, documented usage patterns
 
 ## Out of scope
 
@@ -42,7 +44,7 @@ demonstrates *applying* PKI concepts (signed commits) rather than
 /rbac.js      - role-based access control demo logic
 /style.css    - styling
 /ROADMAP.md   - phased build plan
-/SECURITY_DECISIONS.md - design-doc style write-up of each choice (Phase 2)
+/SECURITY\_DECISIONS.md - design-doc style write-up of each choice (Phase 2)
 /.github/workflows/    - CI/CD, added in Phase 5
 ```
 
@@ -51,4 +53,5 @@ demonstrates *applying* PKI concepts (signed commits) rather than
 1. Create the repo on GitHub (public).
 2. Clone it locally, drop in `index.html`, `rbac.js`, `style.css`.
 3. Open in VS Code with Copilot enabled and work through `ROADMAP.md`
-   phase by phase.
+phase by phase.
+
