@@ -1,6 +1,6 @@
-# RBAC logic - changes here should always get a second look
-/rbac.js @stevey-m
+   # RBAC logic - changes here should always get a second look
+   /rbac.js @stevey-m
 
-# Workflow and security config - same reasoning
-/.github/workflows/ @stevey-m
-/.github/codeql/ @stevey-m
+   # Workflow and security config - same reasoning
+   /.github/workflows/ @stevey-m
+   /.github/codeql/ @stevey-m
