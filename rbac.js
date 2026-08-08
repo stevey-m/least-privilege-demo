@@ -6,8 +6,6 @@
 // This is intentionally simple and client-side only — it's meant to
 // demonstrate permission-modeling concepts, not to be a real auth system.
 
-// some comment
-
 /**
  * Role -> list of "resource:action" permission strings.
  * Follows a least-privilege default: roles only get what they need.
