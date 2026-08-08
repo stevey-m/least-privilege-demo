@@ -29,3 +29,15 @@ select, button {
   min-height: 1.5rem;
   font-weight: 600;
 }
+
+.permissions-readout {
+  font-size: 0.9rem;
+  color: #4a4a4a;
+  margin: 0;
+}
+
+.known-roles-note {
+  font-size: 0.85rem;
+  color: #6a6a6a;
+  margin-top: 0.5rem;
+}

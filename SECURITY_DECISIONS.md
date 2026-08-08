@@ -133,16 +133,35 @@ branch flipped the check to passing, confirming the control responds
 correctly in both directions (blocks the bad state, clears on
 remediation) rather than just failing once and never re-evaluating.
 
-**Open item:** during this testing, a separate `CodeQL Advanced`
-workflow (GitHub's auto-generated default setup) was observed running
-successfully in parallel with the custom `codeql.yml`, while a
-`Code scanning results / CodeQL` check on the same PR showed neutral
-with "1 configuration not found." This suggests two CodeQL
-configurations may currently coexist in the repo, or that the custom
-config reference isn't being picked up consistently on every PR. The
-custom query is confirmed working (per the `eval()` test above), but
-this discrepancy hasn't been root-caused yet and should be resolved
-before treating Phase 4's CodeQL setup as fully clean.
+**Open item — resolved:** the root cause of the "1 configuration not
+found" warning was identified: the live `codeql.yml` workflow's matrix
+only defined `javascript-typescript`, while `main`'s scanning history
+still expected a second `actions`-language configuration (almost
+certainly a remnant of the earlier GitHub-auto-generated "CodeQL
+Advanced" template that had briefly overwritten the custom workflow).
+Resolved by explicitly adding `language: actions` to the matrix —
+GitHub Actions workflow YAML is itself a real attack surface (script
+injection via untrusted PR titles/branch names, secrets misuse,
+overly-broad `permissions:` blocks), so scanning it fits this repo's
+security focus rather than being scope creep.
+
+**Accepted finding:** CodeQL flagged `can()` in `rbac.js` as an
+"unused function." This is a known limitation of the analysis, not
+real dead code — `can()` is called from an inline `<script>` block in
+`index.html`, and CodeQL's JavaScript analysis doesn't trace calls
+from inline HTML script blocks back into a separately-loaded `.js`
+file. Verified this is the explanation (not a real problem) by
+confirming the call site exists in `index.html`. Documented here as an
+accepted/known finding rather than restructuring the script-loading
+model solely to satisfy the scanner.
+
+**Resolved finding:** CodeQL also flagged `permissionsFor()` and
+`knownRoles()` in `rbac.js` as genuinely unused — accurate at the
+time, since they were written but never called from the UI. Fixed by
+adding a live "Permissions for this role" readout and a "Known roles"
+note to `index.html`, so both functions are now exercised by the
+actual demo rather than being dead code kept only for the sake of a
+docblock.
 
 ---
 

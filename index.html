@@ -22,6 +22,7 @@
         <option value="editor">Editor</option>
         <option value="admin">Admin</option>
       </select>
+      <p id="rolePermissions" class="permissions-readout"></p>
 
       <label for="resourceSelect">Resource:</label>
       <select id="resourceSelect">
@@ -40,11 +41,21 @@
 
       <button id="checkAccessBtn">Check Access</button>
       <pre id="rbacOutput" aria-live="polite"></pre>
+      <p id="knownRolesNote" class="known-roles-note"></p>
     </section>
   </main>
 
   <script src="rbac.js"></script>
   <script>
+    function updateRolePermissions() {
+      const role = document.getElementById('roleSelect').value;
+      const permissions = permissionsFor(role);
+      const readout = document.getElementById('rolePermissions');
+      readout.textContent = permissions.length
+        ? `Permissions: ${permissions.join(', ')}`
+        : 'Permissions: none';
+    }
+
     function runAccessCheck() {
       const role = document.getElementById('roleSelect').value;
       const resource = document.getElementById('resourceSelect').value;
@@ -58,6 +69,12 @@
     }
 
     document.getElementById('checkAccessBtn').addEventListener('click', runAccessCheck);
+    document.getElementById('roleSelect').addEventListener('change', updateRolePermissions);
+
+    // Initial state on page load
+    updateRolePermissions();
+    document.getElementById('knownRolesNote').textContent =
+      `Known roles: ${knownRoles().join(', ')}`;
   </script>
 </body>
 </html>
