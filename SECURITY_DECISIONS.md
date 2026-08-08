@@ -11,7 +11,7 @@ repo, not just the *what*. Updated as each phase of ROADMAP.md is built.
 | 2 — Writing decisions down | 🔄 Ongoing |
 | 3 — Human & non-human identity | ✅ Implemented and verified |
 | 4 — Supply chain & code security | ✅ Implemented and verified |
-| 5 — Review & deployment gates | ⏳ Planned, not started |
+| 5 — Review & deployment gates | ✅ Implemented and verified |
 | 6 — CI/CD depth | ⏳ Planned, not started |
 | 7 — Agent identity | ⏳ Planned, not started |
 | 8 — Copilot depth | ⏳ Planned, not started |
@@ -169,10 +169,81 @@ docblock.
 
 ---
 
-## Phase 5 — Review & deployment gates ⏳ Planned, not started
+## Phase 5 — Review & deployment gates ✅ Implemented and verified
 
-*To be filled in once CODEOWNERS, protected environments, and
-repository rulesets are configured for this repo.*
+**Decision: add a CODEOWNERS file mapping `rbac.js` and workflow/CodeQL
+config paths to the maintainer, so PRs touching sensitive files are
+flagged for review rather than relying on remembering to look closely.**
+
+Verified: a test PR modifying an unrelated file (`README.md`) did not
+trigger any automatic reviewer request, confirming the path matching
+is scoped correctly rather than firing on every PR. A test PR modifying
+`rbac.js` did not show an automatic reviewer request either — but this
+is expected, not a failure: GitHub never auto-requests the PR author as
+their own reviewer, even when CODEOWNERS technically matches them. As
+sole maintainer, this specific positive case can't be directly observed
+from the author's seat; real proof of enforcement came instead from the
+ruleset testing below.
+
+**Decision: add a repository ruleset (`main-protection`) on `main`
+requiring a pull request, review from Code Owners, and 1 approval
+before merging — and prove each restriction with a real attempt rather
+than trusting the toggles.**
+
+Verified live, in order:
+- **Direct push to `main` rejected** — Git returned "push declined due
+  to repository rule violations," a real ruleset-level rejection, not
+  a routine Git error.
+- **Self-approval refused** — attempting to approve a PR authored by
+  the same account was explicitly rejected by GitHub ("PR author
+  authors cannot approve"), even with admin/owner permissions.
+- **Merge blocked without a qualifying approval** — the PR's merge
+  button stayed disabled, showing "At least 1 approving review is
+  required by reviewers with write access."
+
+**Decision: add a scoped bypass ("For pull requests only") for the
+maintainer, rather than leaving the bypass list empty indefinitely or
+using the broader "Always allow" mode.**
+
+With an empty bypass list and no second reviewer available, real PRs
+became permanently unmergeable — a genuine solo-maintainer limitation,
+not a flaw in the control itself. "For pull requests only" scopes the
+exception to skipping review on the maintainer's own PRs specifically,
+while direct pushes to `main` remain blocked (confirmed unchanged by
+this addition). Verified live: after adding the bypass, a PR still
+showed the review requirement as present and unmet, but exposed a
+distinct, explicit **"Merge without waiting for requirements to be met
+(bypass rules)"** action — a deliberate, visible action rather than a
+silent full exemption, giving a clear audit trail on any PR merged this
+way.
+
+**Decision: enable Required reviewers on the `github-pages` deployment
+environment, with "Prevent self-review" deliberately left off.**
+
+Enabling "Prevent self-review" here would recreate the same
+solo-maintainer bind as the ruleset — deploys would be permanently
+stuck at "Waiting" with no second person able to approve them. The
+security value being demonstrated is the *pause itself*: a deploy
+cannot silently happen the instant a PR merges; a human must
+consciously look at it and approve, even if that human is the same
+person who merged the code. This protects against, for example, an
+automated or compromised process pushing straight to a live deploy
+with zero human involvement — a different and still meaningful threat
+model from "a second person catches something the first person
+missed," which isn't available here. Verified live: a real merge to
+`main` produced a deploy run that stopped at status "Waiting," with
+GitHub explicitly logging "stevey-m requested your review to deploy to
+github-pages." After manual approval, the same run logged "stevey-m
+approved now → github-pages" and completed successfully.
+
+**Solo-maintainer caveat, stated explicitly:** every review-based
+control in this phase (CODEOWNERS routing, mandatory PR review,
+deployment approval) currently resolves to the same single person
+approving their own work via a documented, scoped bypass — not a real
+second set of eyes. The value demonstrated here is the *pattern* and
+its *mechanics* (a control that genuinely blocks direct action and
+requires a deliberate, logged exception to proceed), not a claim that
+independent review is actually happening in this repo today.
 
 ## Phase 6 — CI/CD depth ⏳ Planned, not started
 
