@@ -153,7 +153,11 @@ from inline HTML script blocks back into a separately-loaded `.js`
 file. Verified this is the explanation (not a real problem) by
 confirming the call site exists in `index.html`. Documented here as an
 accepted/known finding rather than restructuring the script-loading
-model solely to satisfy the scanner.
+model solely to satisfy the scanner. Manually dismissed in
+**Security → Code scanning alerts** with reason "Used in tests / false
+positive" and a note referencing this explanation, so the audit trail
+in GitHub reflects a documented decision rather than an alert that
+silently disappeared.
 
 **Resolved finding:** CodeQL also flagged `permissionsFor()` and
 `knownRoles()` in `rbac.js` as genuinely unused — accurate at the
