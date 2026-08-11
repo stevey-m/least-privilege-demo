@@ -43,7 +43,7 @@ function can(role, resource, action) {
     return false; // unknown role: deny by default
   }
   return permissions.includes(`${resource}:${action}`);
-
+}
 
 /**
  * Returns the full list of permissions for a role (for display purposes).
