@@ -4,6 +4,8 @@ A static web app demonstrating least-privilege identity practices for
 humans, workloads, and AI agents — RBAC, OIDC deployment, signed
 commits, and scoped agent permissions — built with GitHub Copilot.
 
+**Live demo:** https://stevey-m.github.io/least-privilege-demo/
+
 ## Objectives
 
 This repo exists to demonstrate applied identity and access management
