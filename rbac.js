@@ -28,7 +28,7 @@ const ROLE_PERMISSIONS = {
     'dashboard:write',
     'user:manage',
   ],
-;
+};
 
 /**
  * Checks whether a role is permitted to perform an action on a resource.
