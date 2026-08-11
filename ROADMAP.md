@@ -9,13 +9,13 @@ on top of. See README.md for the full objective descriptions.
 phase (CODEOWNERS, review gates, agent scoping) a real feature to
 protect instead of a placeholder.
 
-## Phase 2 — Security Decisions doc
+## Phase 2 — Security Decisions doc (ongoing)
 
 Write `SECURITY_DECISIONS.md` — a short design-doc explaining *why*
 each choice below was made, as you make it. Written like a case study,
 not a checklist; this is the piece that reads best in an interview.
 
-## Phase 3 — Human & non-human identity
+## Phase 3 — Human & non-human identity (done)
 
 - **NHI:** Deploy to GitHub Pages via OIDC federation — no stored
   deploy token or long-lived secret.
@@ -30,13 +30,13 @@ not a checklist; this is the piece that reads best in an interview.
 > resource is set up; the GitHub Pages OIDC deploy above is the
 > in-scope version for now.
 
-## Phase 4 — Supply chain & code security
+## Phase 4 — Supply chain & code security (done)
 
 - CodeQL with at least one custom query (not just the default setup).
 - Dependency review action blocking PRs that introduce a known-vulnerable
   dependency.
 
-## Phase 5 — Review & deployment gates
+## Phase 5 — Review & deployment gates (done)
 
 - **CODEOWNERS** — route changes to `rbac.js` and workflow files through
   mandatory reviewers.
@@ -44,7 +44,7 @@ not a checklist; this is the piece that reads best in an interview.
   (break-glass / just-in-time access pattern).
 - Repository rulesets on `main` (replaces basic branch protection).
 
-## Phase 6 — CI/CD depth
+## Phase 6 — CI/CD depth (done)
 
 - Convert to a reusable workflow structure.
 - Matrix build (multiple Node versions).
@@ -84,12 +84,11 @@ merge cycle.
 ## Suggested build order
 
 1. RBAC demo — done.
-2. Security Decisions doc — start now, keep updating as you go.
-3. Human & non-human identity (OIDC, signed commits, secret scanning).
-4. Supply chain & code security.
-5. Review & deployment gates.
-6. CI/CD depth.
-7. Agent identity.
+2. Security Decisions doc — ongoing, updated after each phase.
+3. Human & non-human identity (OIDC, signed commits, secret scanning) — done.
+4. Supply chain & code security — done.
+5. Review & deployment gates — done.
+6. CI/CD depth — done.
+7. Agent identity — next up.
 8. Copilot depth — layer in throughout, not a discrete step.
 9. Issues & PRs — apply to all phases above.
-
