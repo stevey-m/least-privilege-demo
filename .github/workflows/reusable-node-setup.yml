@@ -3,7 +3,7 @@ name: Reusable Node Setup
 on:
   workflow_call:
     inputs:
-     node-version:
+      node-version:
         required: true
         type: string
 
