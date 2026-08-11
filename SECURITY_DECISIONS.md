@@ -12,7 +12,7 @@ repo, not just the *what*. Updated as each phase of ROADMAP.md is built.
 | 3 — Human & non-human identity | ✅ Implemented and verified |
 | 4 — Supply chain & code security | ✅ Implemented and verified |
 | 5 — Review & deployment gates | ✅ Implemented and verified |
-| 6 — CI/CD depth | ⏳ Planned, not started |
+| 6 — CI/CD depth | ✅ Implemented and verified |
 | 7 — Agent identity | ⏳ Planned, not started |
 | 8 — Copilot depth | ⏳ Planned, not started |
 
@@ -245,10 +245,103 @@ its *mechanics* (a control that genuinely blocks direct action and
 requires a deliberate, logged exception to proceed), not a claim that
 independent review is actually happening in this repo today.
 
-## Phase 6 — CI/CD depth ⏳ Planned, not started
+## Phase 6 — CI/CD depth ✅ Implemented and verified
 
-*To be filled in once the reusable workflow structure, matrix build,
-and deploy job exist.*
+**Decision: add a CI workflow (`ci.yml`) running a matrix syntax check
+across Node 18/20/22 on every PR, and prove it with a real
+deliberately-broken commit rather than trusting the YAML alone.**
+
+This was the most operationally difficult phase so far, and the
+friction itself is worth documenting honestly rather than smoothing
+over — it produced two genuine, separate bugs before the first real
+test result:
+
+- **YAML indentation drift.** The first version of `ci.yml` failed
+  with "Invalid workflow file" before any job ever ran — the entire
+  file was shifted 2 spaces right of where it needed to be. Root
+  cause: editing the file via Notepad, where paste/auto-indent
+  behavior silently shifted every line. A second attempt (adding
+  `fail-fast: false`) reintroduced the same class of problem, this
+  time as a literal tab character mixed into space-indented YAML —
+  caught not by manual inspection but by GitHub Advanced Security's
+  automatic syntax annotation on the PR, which named the exact tab
+  character and line.
+- **Fix: stopped hand-editing YAML in a text editor entirely.**
+  Switched to writing files via a single non-interactive command
+  (ultimately a base64-encoded `[System.IO.File]::WriteAllText` call
+  in PowerShell, after a multi-line here-string approach also proved
+  unreliable in this terminal — the closing `"@` delimiter failed to
+  register correctly on a multi-line paste). This guarantees exact
+  bytes land in the file with no editor or terminal interference. This
+  is a genuinely reusable lesson for any future YAML work in this
+  repo, not just this one file.
+
+Once the YAML was actually valid, verified live:
+- A deliberately broken `rbac.js` (missing closing brace) produced a
+  real `SyntaxError: Unexpected end of input` in the `node --check`
+  step, at the correct line.
+- Discovered along the way: GitHub Actions' matrix `fail-fast`
+  defaults to `true`, meaning the first failing Node version cancels
+  the other two before they run — silently reducing "tested against
+  3 Node versions" to "tested against whichever one failed first."
+  Fixed by explicitly setting `fail-fast: false`; re-verified all
+  three versions then failed independently and passed independently
+  after the fix was reverted.
+
+**Decision: add an explicit `permissions: contents: read` block to
+`ci.yml`, in response to a real CodeQL finding rather than
+proactively.**
+
+GitHub Advanced Security flagged (Medium severity) that the workflow
+did not limit `GITHUB_TOKEN` permissions, defaulting to broader
+implicit access than the job needs. Fixed directly; re-scan confirmed
+the alert cleared with no new alerts introduced. This is a genuine,
+if small, least-privilege finding — fitting for this repo's stated
+purpose — found through normal CI iteration rather than a dedicated
+security pass.
+
+**Decision: factor Node setup into a reusable workflow
+(`reusable-node-setup.yml`) called via `workflow_call`, while keeping
+the actual Node-version matrix on the calling `syntax-check` job.**
+
+An initial refactor attempt collapsed into two duplicated,
+incorrectly-nested `syntax-check:` blocks (a copy-paste/editor issue
+compounding the same YAML fragility as above), and — separately —
+would have silently dropped the 3-version matrix testing entirely,
+since a `needs:` dependency only orders execution and does not hand a
+calling job's matrix down to a called reusable workflow. Both were
+caught and corrected before merging, rather than discovered later:
+the duplicated blocks by direct inspection of the file's raw content,
+and the matrix issue by design review before the first real test.
+
+**Stated limitation, not glossed over:** `workflow_call` jobs run on
+isolated runners — a reusable "setup" job cannot hand off its checked
+out files to a separate calling job the way steps within one job can.
+`syntax-check` therefore still performs its own `actions/checkout`
+step. The reusable workflow here demonstrates the *pattern* of
+extracting shared configuration (Node version input handling) into a
+single-source-of-truth file, not an elimination of all duplication —
+an accurate framing is more valuable here than an inflated one.
+
+Verified live: a deliberately broken `rbac.js` on this refactored
+structure produced the expected split result — `setup (18/20/22)`
+passed independently (it only performs checkout and Node install, and
+has no reason to inspect `rbac.js`), while `syntax-check (18/20/22)`
+all failed with the same real `SyntaxError` as before. This confirms
+the two job types are genuinely decoupled, not just visually
+separated.
+
+**Decision: add the live GitHub Pages URL to `README.md`, as the
+concrete deliverable a resume/portfolio reviewer actually needs.**
+
+The deploy workflow itself was already built and verified during
+Phase 5's environment-protection testing — no new deploy logic was
+needed here. Verified live: the published URL
+(`https://stevey-m.github.io/least-privilege-demo/`) loads the actual
+RBAC demo, including the "Permissions for this role" and "Known
+roles" UI additions from the Phase 4 CodeQL alert cleanup — confirming
+the live site reflects the current state of the code, not a stale
+deploy.
 
 ## Phase 7 — Agent identity ⏳ Planned, not started
 
