@@ -16,6 +16,18 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [18, 20, 22]
+    uses: ./.github/workflows/reusable-node-setup.yml
+    with:
+      node-version: ${{ matrix.node-version }}
+
+    syntax-check:
+      needs: setup
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout repo
+          uses: actions/checkout@v4
+        - name: Check rbac.js syntax
+          run: node --check rbac.js
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
