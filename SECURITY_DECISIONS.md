@@ -13,7 +13,7 @@ repo, not just the *what*. Updated as each phase of ROADMAP.md is built.
 | 4 — Supply chain & code security | ✅ Implemented and verified |
 | 5 — Review & deployment gates | ✅ Implemented and verified |
 | 6 — CI/CD depth | ✅ Implemented and verified |
-| 7 — Agent identity | ⏳ Planned, not started |
+| 7 — Agent identity | ✅ Implemented and verified |
 | 8 — Copilot depth | ⏳ Planned, not started |
 
 ---
@@ -343,10 +343,73 @@ roles" UI additions from the Phase 4 CodeQL alert cleanup — confirming
 the live site reflects the current state of the code, not a stale
 deploy.
 
-## Phase 7 — Agent identity ⏳ Planned, not started
+## Phase 7 — Agent identity ✅ Implemented and verified
 
-*To be filled in once the Copilot coding agent's token permissions are
-explicitly scoped.*
+**Decision: assign a real, low-stakes task to Copilot's cloud coding
+agent via a GitHub Issue, and use the repo's actual Copilot cloud
+agent settings panel (Settings → Copilot → Cloud agent) rather than a
+custom Actions workflow, since GitHub exposes explicit scoping there
+directly.**
+
+This turned out better than expected — GitHub provides real,
+dedicated controls here, not just the general repository ruleset:
+
+- **Firewall enabled, with the recommended allowlist on** — restricts
+  the agent's network access during code generation/execution to
+  known package and tool sources, rather than the open internet.
+- **"Require approval for workflow runs" — on.** This is the direct
+  equivalent of scoping the agent's effective permissions: any Actions
+  workflow that would run as a result of Copilot's push (CI, CodeQL,
+  Dependency Review) pauses and waits for explicit maintainer
+  approval before executing, rather than running automatically the
+  instant the agent pushes.
+- **Validation tools — CodeQL, Copilot code review, secret scanning,
+  and dependency vulnerability checks all on.** The agent's own diff
+  is checked against the same controls built in Phase 4 before a
+  human ever reviews it.
+
+**Decision: disable "Allow automations."** This setting would let
+anyone with write access schedule the agent to run unattended, or
+trigger it automatically from events like new issues/PRs, with no
+human directly initiating each run. Not needed for this repo's actual
+use case (a one-off assigned task, not a recurring automated process),
+and leaving it enabled is unused attack surface — specifically for
+prompt-injection-style risk, where an untrusted actor's issue/PR
+content could otherwise trigger agent behavior with no human in the
+loop deciding to kick it off. Disabled as a deliberate, documented
+choice rather than left on by default.
+
+**Verified live, via a real assigned task** (Issue #27, "Add a short
+'How RBAC denies unknown roles' note to README.md" → PR #28): three
+independent controls fired simultaneously on the resulting PR, not
+just one:
+1. **The Phase 5 ruleset applied identically to the agent's PR** —
+   "Review required," blocked from merging without approval, exactly
+   like a human-authored PR.
+2. **"Require approval for workflow runs" genuinely paused CI,
+   CodeQL, and Dependency Review** on this PR until explicitly
+   approved — confirmed by watching the checks sit in an
+   "awaiting approval" state, then actually start and complete only
+   after approval was given.
+3. **The PR opened as a draft**, which GitHub blocks from merging
+   regardless of review/check status until explicitly marked "Ready
+   for review" — an additional default layer specific to
+   agent-authored PRs, not something configured deliberately for this
+   repo but worth noting as a real, observed behavior.
+
+The PR's own content was also accurate: Copilot correctly identified
+and explained the actual fail-closed logic in `can()` (unknown role →
+`undefined` permissions lookup → `false` returned), rather than a
+generic or incorrect description — the change was scoped to
+`README.md` only, no unrequested edits elsewhere.
+
+**Takeaway:** an AI agent's identity in this repo is not a special
+case requiring separate enforcement — the same review gates, the same
+CI/security validation, and an extra draft-PR safeguard all applied
+without any special-casing. The meaningful addition specific to the
+agent (beyond what Phase 5 already provided) is the network firewall
+and the workflow-run approval gate, both configured explicitly in this
+phase rather than inherited from earlier work.
 
 ## Phase 8 — Copilot depth ⏳ Planned, not started
 

@@ -50,7 +50,7 @@ not a checklist; this is the piece that reads best in an interview.
 - Matrix build (multiple Node versions).
 - Working deploy job to GitHub Pages — live demo URL for the resume/portfolio.
 
-## Phase 7 — Agent identity
+## Phase 7 — Agent identity (done)
 
 - Once using the Copilot coding agent, explicitly scope its `GITHUB_TOKEN`
   permissions to the minimum needed (e.g. read issues, write only to its
@@ -89,6 +89,6 @@ merge cycle.
 4. Supply chain & code security — done.
 5. Review & deployment gates — done.
 6. CI/CD depth — done.
-7. Agent identity — next up.
+7. Agent identity — done.
 8. Copilot depth — layer in throughout, not a discrete step.
 9. Issues & PRs — apply to all phases above.
