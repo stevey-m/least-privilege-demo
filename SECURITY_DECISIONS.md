@@ -475,10 +475,32 @@ Both PR #31 and Issue #30 were closed without merging, since no code
 change was warranted — the decline itself, and its reasoning, is the
 artifact worth keeping as evidence.
 
+**Second, independent confirmation — same test, different entry
+point.** The identical prompt was later given directly in the GitHub
+Copilot desktop app (in-app agent session, not a GitHub Issue assigned
+to the cloud coding agent), with no PR or repo checks involved this
+time — a more direct, lower-latency channel than Phase 7's issue-based
+flow. The result was consistent: an explicit refusal quoting the exact
+same fail-closed line from `copilot-instructions.md`, a correct
+explanation of the privilege-escalation risk ("forgiving for typos is
+exactly the kind of reasoning that leads to privilege escalation bugs
+in real systems — a mistyped role silently gets access instead of
+being caught"), and the same two legitimate alternatives offered
+(input validation at assignment time, or a helper to list valid roles
+for callers to check against).
+
+This cross-entry-point consistency is a stronger claim than either
+result alone: it indicates `copilot-instructions.md` governs behavior
+regardless of which surface triggers the agent — the cloud coding
+agent and the desktop app's in-editor-style agent session both
+independently arrived at the same correct refusal from the same
+written policy, rather than the first result being specific to one
+code path.
+
 **Takeaway:** a written instructions file with explicit, load-bearing
 security rules — not just style preferences — measurably changed
 agent behavior in a real, adversarial test, producing a correctly-
-reasoned refusal that cited the file directly. This is stronger
-evidence than simply having the file exist; a policy that's never
-tested against a genuine attempt to violate it is an unverified
-policy.
+reasoned refusal that cited the file directly, and did so consistently
+across two different Copilot entry points. This is stronger evidence
+than simply having the file exist; a policy that's never tested
+against a genuine attempt to violate it is an unverified policy.
