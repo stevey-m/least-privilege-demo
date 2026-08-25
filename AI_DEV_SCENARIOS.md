@@ -30,33 +30,109 @@ looks like day to day.
 
 ## 3. Steering mid-task
 
-Start a task, then — while it's still working — send a follow-up
-message changing direction slightly, e.g. start with "add a footer to
-index.html," then mid-session add "actually, keep it to one line."
-Goal: get a feel for how responsive it is to redirection while a
-session is live, not just at the start.
+**What it's testing:** whether you can redirect a live session, or
+whether it only listens at the start and then runs to completion
+regardless of what you say partway through.
+
+### Steps
+1. In the app, start a new session on this repo with:
+   > "Add a short footer to index.html with the text 'Built as a
+   > least-privilege demo.'"
+2. As soon as it starts working (before it finishes — watch for the
+   point where it's mid-edit or about to open a PR), send a follow-up
+   in the same session:
+   > "Actually, keep it to one line and put it right under the
+   > closing </main> tag, not in a separate footer element."
+3. Watch what happens: does it stop and adjust the in-progress work,
+   restart from scratch with the new instruction, or ignore the
+   follow-up and finish what it originally started?
+4. When it opens the PR, check the actual diff against what you asked
+   for the *second* time, not the first.
+
+### What to note
+- How long after your follow-up did it visibly react?
+- Did the final result match your correction, your original request,
+  or some mix of both?
+- Close the PR without merging once you've seen the result — this one
+  is purely for observing behavior, not a change you need on `main`.
 
 ## 4. The "My Work" dashboard, for real
 
-Connect a second repo (`copilot-github-sandbox` is a good candidate)
-alongside this one, and use the My Work view to glance at both without
-switching browser tabs. Notice what it surfaces (open sessions, PRs,
-issues) and what it doesn't.
+**What it's testing:** whether the consolidated dashboard is actually
+useful day-to-day, or just a nice idea on paper.
+
+### Steps
+1. In the app, find wherever repos are added/connected (a "+" or repo
+   picker, same place you connected `least-privilege-demo` originally).
+2. Add `copilot-github-sandbox` alongside it.
+3. Open the **My Work** view (or equivalent dashboard/home screen) and
+   look at what's shown across both repos at once — open sessions,
+   recent PRs, issues, anything else.
+4. Start a trivial session on `copilot-github-sandbox` (e.g. "what does
+   this repo's CI workflow do?") while `least-privilege-demo` still has
+   activity in its history, and confirm both show up in the same view
+   without switching context manually.
+
+### What to note
+- What does the dashboard surface well (e.g. active sessions) versus
+  what's missing or requires clicking into the repo directly (e.g.
+  CI status, open alerts)?
+- Is this something you'd actually use daily with more repos
+  connected, or does it feel like overhead for just two?
 
 ## 5. Re-enable automations, briefly, on purpose
 
-Phase 7 disabled "Allow automations" deliberately. As a bounded
-experiment: temporarily re-enable it, set up one harmless scheduled or
-event-triggered automation (e.g. "run a syntax check summary weekly"),
-observe it fire once, then turn "Allow automations" back off.
-Goal: see the feature work firsthand before deciding you don't need it
-long-term, rather than only knowing it from the settings description.
+**What it's testing:** seeing the feature work firsthand, since Phase
+7 disabled it based on reasoning alone, not observed behavior.
+
+### Steps
+1. Go to **Settings → Copilot → Cloud agent** on `least-privilege-demo`
+   (same panel from Phase 7).
+2. Turn **"Allow automations"** back **On**.
+3. Set up one harmless, bounded automation — e.g. a scheduled task
+   along the lines of "once, run a syntax check summary and comment
+   the result on an issue" (avoid anything recurring forever; a
+   one-off is enough to observe the behavior).
+4. Wait for it to fire (or trigger the event it's watching for, if
+   event-based rather than scheduled).
+5. Confirm it actually ran, then turn **"Allow automations" back Off**
+   — this is a deliberate, bounded experiment, not a standing change.
+
+### What to note
+- Did it run unattended exactly as configured, with no one
+  triggering it directly?
+- Would the "only allow automations triggered by users with write
+  access" sub-setting have meaningfully changed what could happen
+  here, or does the top-level "Allow automations" toggle alone cover
+  the real risk?
+- Confirm the toggle is back **Off** before moving on — don't leave
+  this enabled after the experiment.
 
 ## 6. Compare a canvas session to a plain PR
 
-If the app's canvas/shared-workspace view is available, assign a task
-through it instead of a plain issue, and compare the experience to
-Scenario 2 above — is it clearer to follow along, or just different?
+**What it's testing:** whether the canvas/shared-workspace view (if
+available in your version of the app) is a meaningfully different way
+to work, or just a different skin on the same underlying session.
+
+### Steps
+1. Look for a canvas or shared-workspace option when starting a new
+   session (naming and availability may vary by app version — if you
+   don't see one, note that and skip this scenario for now rather than
+   forcing it).
+2. Assign the same kind of small, safe task as Scenario 2 through the
+   canvas view instead of a plain issue/prompt — e.g. "add a comment
+   above `knownRoles()` explaining what it's used for."
+3. While it works, use whatever the canvas offers (shared terminal,
+   inline plan, live diff view) rather than just waiting for a
+   finished PR.
+4. Compare directly to how Scenario 2 felt: could you follow along
+   with *what it was doing and why* more easily here, or did it just
+   look different without adding real visibility?
+
+### What to note
+- Is the canvas genuinely more transparent, or mostly cosmetic?
+- Would you reach for this by default going forward, or only for
+  larger/riskier tasks where visibility actually matters more?
 
 ---
 
