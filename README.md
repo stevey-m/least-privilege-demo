@@ -48,6 +48,24 @@ demonstrates *applying* PKI concepts (signed commits) rather than
 /.github/workflows/    - CI/CD, added in Phase 5
 ```
 
+## How RBAC denies unknown roles
+
+The `can(role, resource, action)` function in `rbac.js` follows a
+**deny-by-default** pattern for unknown roles:
+
+```js
+const permissions = ROLE_PERMISSIONS[role];
+if (!permissions) {
+  return false; // unknown role: deny by default
+}
+```
+
+If a caller passes a role string that does not exist in `ROLE_PERMISSIONS`
+(e.g. `"superuser"` or an empty string), the lookup returns `undefined` and
+the function immediately returns `false` — granting no access at all.
+This is the least-privilege default: anything not explicitly permitted is
+denied, so typos or novel role names fail closed rather than open.
+
 ## Setup
 
 1. Create the repo on GitHub (public).
