@@ -7,6 +7,9 @@
 // demonstrate permission-modeling concepts, not to be a real auth system.
 
 /**
+ * Single source of truth for all role permissions in this demo.
+ * To grant or revoke access, edit this object — no other file needs to change.
+ *
  * Role -> list of "resource:action" permission strings.
  * Follows a least-privilege default: roles only get what they need.
  */
