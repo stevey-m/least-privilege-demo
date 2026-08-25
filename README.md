@@ -43,31 +43,30 @@ demonstrates *applying* PKI concepts (signed commits) rather than
 
 ## Structure
 
-```
-/index.html                        - demo page with the RBAC permission checker
-/rbac.js                           - role-based access control demo logic
-/style.css                         - styling
-/package.json, package-lock.json   - minimal, no real runtime dependencies
+/index.html - demo page with the RBAC permission checker
+/rbac.js - role-based access control demo logic
+/style.css - styling
+/package.json, package-lock.json - minimal, no real runtime dependencies
 
-/ROADMAP.md                        - phased build plan, with status per phase
-/SECURITY_DECISIONS.md             - design-doc write-up of every choice, phase by phase
-/APPENDIX_COPILOT_APP.md           - standalone orientation note on GitHub's
-                                      Copilot surfaces (VS Code, CLI, desktop app)
+/ROADMAP.md - phased build plan, with status per phase
+/SECURITY_DECISIONS.md - design-doc write-up of every choice, phase by phase
+/APPENDIX_COPILOT_APP.md - standalone orientation note on GitHub's
+Copilot surfaces (VS Code, CLI, desktop app)
 
 /PHASE3_GUIDE.md through PHASE7_GUIDE.md
-                                    - step-by-step "how to use / how to test"
-                                      guides for each phase, written for a
-                                      GitHub beginner, including real gotchas
-                                      hit along the way
+- step-by-step "how to use / how to test"
+guides for each phase, written for a
+GitHub beginner, including real gotchas
+hit along the way
 
-/.github/CODEOWNERS                - routes rbac.js and workflow changes to
-                                      mandatory review (Phase 5)
-/.github/copilot-instructions.md   - repo conventions and guardrails for
-                                      Copilot's coding agent and agent mode (Phase 8)
-/.github/codeql/                   - custom CodeQL query + config (Phase 4)
-/.github/workflows/                - CI, CodeQL, Dependency Review, and
-                                      Pages deploy workflows
-```
+/.github/CODEOWNERS - routes rbac.js and workflow changes to
+mandatory review (Phase 5)
+/.github/copilot-instructions.md - repo conventions and guardrails for
+Copilot's coding agent and agent mode (Phase 8)
+/.github/codeql/ - custom CodeQL query + config (Phase 4)
+/.github/workflows/ - CI, CodeQL, Dependency Review, and
+Pages deploy workflows
+
 
 ## How RBAC denies unknown roles
 
