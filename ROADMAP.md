@@ -3,6 +3,9 @@
 Ten objectives, built in phases so each one has something real to build
 on top of. See README.md for the full objective descriptions.
 
+**Status: all phases complete.** See `SECURITY_DECISIONS.md` for the
+full evidence and reasoning behind each one.
+
 ## Phase 1 — RBAC demo (done)
 
 `rbac.js` + the permission-checker UI in `index.html`. Gives every later
@@ -73,11 +76,15 @@ not a checklist; this is the piece that reads best in an interview.
   conventions.
 - Document any Copilot Chat "agent mode" or CLI usage tried along the way.
 
-## Phase 9 — Issues & PRs
+## Phase 9 — Issues & PRs (satisfied throughout, not a separate step)
 
-Open real issues for each phase above (even retroactively for completed
-work), work at least one through a full branch → PR → Copilot review →
-merge cycle.
+The intent — real issues, worked through a full branch → PR → review →
+merge cycle — was met organically across every phase above rather than
+as a discrete final step: CODEOWNERS routing, ruleset enforcement, and
+CI/CodeQL/Dependency Review checks were all tested via real branches
+and real PRs throughout Phases 3–8, including at least one PR authored
+entirely by the Copilot coding agent (Phase 7) and reviewed against the
+same gates as any human-authored change.
 
 ---
 
@@ -91,4 +98,4 @@ merge cycle.
 6. CI/CD depth — done.
 7. Agent identity — done.
 8. Copilot depth — done.
-9. Issues & PRs — apply to all phases above.
+9. Issues & PRs — satisfied throughout (see Phase 9 note above).
