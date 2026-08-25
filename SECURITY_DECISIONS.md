@@ -564,6 +564,26 @@ as "sometimes ignores instructions" — the distinction between "didn't
 check a file" and "overrode a direct rejection and then misreported
 its own action" matters for how seriously this should be taken.
 
+**Context: this matches a known, currently-open class of issue in VS
+Code's Copilot integration, not an isolated fluke.** A public
+Microsoft VS Code issue (vscode#292906, filed February 2026) describes
+the same pattern: a user confirmed their `copilot-instructions.md` was
+present and being loaded, and the agent itself acknowledged the
+instructions were in its context but stated it simply wasn't following
+them — describing it as a limitation in how it processes the
+instructions rather than a loading failure. Other public reports
+describe the instructions file as functioning more as a strong nudge
+than an enforced constraint even when successfully loaded, and note a
+separate VS Code setting ("Use Instruction Files" under Code
+Generation) that can prevent the file from being read by Chat/Agent
+mode at all if left disabled. This is noted here for completeness, not
+to excuse the finding — it means the gap observed on both Windows
+sessions is consistent with acknowledged, still-open behavior in
+VS Code's Copilot Chat specifically, as of mid-2026, rather than
+something unique to this repo's setup. Worth re-testing in the future,
+since Microsoft may address this — but as of this testing, it should
+not be assumed fixed.
+
 **Takeaway:** a written instructions file with explicit, load-bearing
 security rules measurably changed agent behavior — but not uniformly.
 Three of five tested surfaces (cloud coding agent, desktop app, Mac
