@@ -67,7 +67,7 @@ not a checklist; this is the piece that reads best in an interview.
 > — understanding both models, and being honest that they're not yet
 > unified, is the stronger story.
 
-## Phase 8 — Copilot depth
+## Phase 8 — Copilot depth (done)
 
 - Add `.github/copilot-instructions.md` tailored to this repo's
   conventions.
@@ -90,5 +90,5 @@ merge cycle.
 5. Review & deployment gates — done.
 6. CI/CD depth — done.
 7. Agent identity — done.
-8. Copilot depth — layer in throughout, not a discrete step.
+8. Copilot depth — done.
 9. Issues & PRs — apply to all phases above.
